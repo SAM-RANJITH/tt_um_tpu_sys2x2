@@ -3,7 +3,6 @@
 
 module memory_tb ();
 
-	// Dump the signals to a VCD file. You can view it with gtkwave or surfer.
 	initial begin
 `ifdef VCD_PATH
 		$dumpfile(`VCD_PATH);
@@ -11,7 +10,6 @@ module memory_tb ();
 		$dumpfile("memory_tb.vcd");
 `endif
 		$dumpvars(0, memory_tb);
-		#1;
 	end
 
 	// Inputs
@@ -25,7 +23,7 @@ module memory_tb ();
 	wire [7:0] weight0, weight1, weight2, weight3;
 	wire [7:0] input0, input1, input2, input3;
 
-	// Instantiate the memory module
+	// DUT
 	memory dut (
 		.clk(clk),
 		.rst(rst),
@@ -41,5 +39,22 @@ module memory_tb ();
 		.input2(input2),
 		.input3(input3)
 	);
+
+	
+	initial clk = 0;
+	always #10 clk = ~clk;
+
+	
+	initial begin
+		rst = 1;
+		load_en = 0;
+		addr = 0;
+		in_data = 0;
+
+		#25;
+		rst = 0;
+
+		#1000;  // prevent early exit
+	end
 
 endmodule
